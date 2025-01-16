@@ -24,6 +24,22 @@ class User extends Authenticatable
         'password',
     ];
 
+    //relation between user and post
+    public function posts(){
+        return $this->hasMany(Post::class);
+
+    }
+
+    //relation between user and comments
+    public function comments(){
+        return $this->hasMany(Comment::class);
+    }
+
+//relation between user and like
+    public function likes(){
+        return $this->hasMany(Like::class);
+    }
+
     /**
      * The attributes that should be hidden for serialization.
      *
