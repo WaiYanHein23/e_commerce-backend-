@@ -17,7 +17,7 @@ class PostController extends Controller
         $posts=Post::all();
 
         return response()->json([
-            "data"=>$posts
+            "posts"=>$posts
         ]);
     }
 

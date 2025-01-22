@@ -22,7 +22,7 @@ class AuthController extends Controller
 
         if($validator->fails()){
             return response()->json([
-                'message'=>'unprocessable',
+                'message'=>'Unprocessable',
                 'error'=>$validator->errors()
             ],422);
         }
