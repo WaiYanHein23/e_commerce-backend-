@@ -22,7 +22,6 @@ class AuthController extends Controller
 
         if($validator->fails()){
             return response()->json([
-                'message'=>'Unprocessable',
                 'error'=>$validator->errors()
             ],422);
         }
@@ -37,7 +36,11 @@ class AuthController extends Controller
         }
 
         $user=User::create(
-            request()->all()
+            [
+                "name"=>request('name'),
+                "email"=>request('email'),
+                "password"=>Hash::make(request('password'))
+            ]
         );
 
         $token=$user->createToken('user_token')->plainTextToken;
@@ -45,7 +48,7 @@ class AuthController extends Controller
 
         return response()->json([
             'message'=>'Register successful',
-            'user'=>$user,
+            'id'=>$user->id,
             'token'=>$token
         ]);
 
