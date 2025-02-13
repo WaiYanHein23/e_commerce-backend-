@@ -2,27 +2,27 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
-use App\Models\Brand;
+use App\Models\Color;
+use App\Models\Grade;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
-class BrandController extends Controller
+class GradeController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $brands=Brand::all();
-        if ($brands->count() == 0) {
+        $grades = Color::all();
+        if ($grades->count() == 0) {
             return response()->json([
-                "message"=>"Brands not found"
+                "message" => "Grades not found"
             ],
             404);
         }
         return response()->json([
-            "data"=>$brands
+            "data" => $grades
         ],
         200);
     }
@@ -32,8 +32,8 @@ class BrandController extends Controller
      */
     public function store(Request $request)
     {
-        $validator =Validator::make($request->all(), [
-            "name" => "required|unique:brands"
+        $validator = Validator::make($request->all(), [
+            "name" => "required|unique:grades"
         ]);
 
         if ($validator->fails()) {
@@ -43,19 +43,15 @@ class BrandController extends Controller
             422);
         }
 
-        $brand =Brand::create([
-            "name" => $request->name,
-            "status" => $request->status
+        $grade = Grade::create([
+            "name" => $request->name
         ]);
 
         return response()->json([
-            "message" => "Brand created successfully",
-            "id" => $brand->id
+            "message" => "Grade created successfully",
+            "id" => $grade->id
         ],
         200);
-
-
-
     }
 
     /**
@@ -63,16 +59,15 @@ class BrandController extends Controller
      */
     public function show(string $id)
     {
-
-        $brand = Brand::find($id);
-        if ($brand) {
+        $grade = Color::find($id);
+        if ($grade) {
             return response()->json([
-                "data" => $brand
+                "data" => $grade
             ],
             200);
         } else {
             return response()->json([
-                "message" => "Brand not found"
+                "message" => "Grade not found"
             ],
             404);
         }
@@ -83,9 +78,8 @@ class BrandController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
         $validator = Validator::make($request->all(), [
-            "name" => "required"
+            "name" => "required|unique:grades"
         ]);
 
         if ($validator->fails()) {
@@ -95,49 +89,46 @@ class BrandController extends Controller
             422);
         }
 
-        $brand = Brand::find($id);
+        $grade = Grade::find($id);
 
-        if ($brand) {
-            $brand->name = $request->name;
-            $brand->status =$request->status;
-            $brand->save();
+        if ($grade) {
+            $grade->name = $request->name;
+            $grade->save();
 
             return response()->json([
-                "message" => "Brand updated successfully",
-               "id" => $brand->id
+                "message" => "Grade updated successfully",
+                "id" => $grade->id
             ],
             200);
         } else {
             return response()->json([
-                "message" => "Brand not found",
+                "message" => "Grade not found"
             ],
             404);
-
-
         }
-    }
+    } // **Closing bracket added here!**
 
     /**
      * Remove the specified resource from storage.
      */
     public function destroy(string $id)
     {
-        $brand = Brand::find($id);
+        $grade = Grade::find($id);
 
-        if ($brand) {
-            $brand->delete();
+        if ($grade) {
+            $grade->delete();
 
             return response()->json([
-                "message" => "Brand deleted successfully",
-                "id" => $brand->id
+                "message" => "Grade deleted successfully",
+                "id" => $grade->id
+
             ],
             200);
         } else {
             return response()->json([
-                "message" => "Brand id is  not found"
+                "message" => "Grade id is not found"
             ],
             404);
-
         }
     }
 }

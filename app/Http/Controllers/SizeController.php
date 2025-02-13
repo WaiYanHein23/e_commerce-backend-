@@ -2,27 +2,27 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
-use App\Models\Brand;
+use App\Models\Color;
+use App\Models\Size;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
-class BrandController extends Controller
+class SizeController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $brands=Brand::all();
-        if ($brands->count() == 0) {
+        $sizes = Size::all();
+        if ($sizes->count() == 0) {
             return response()->json([
-                "message"=>"Brands not found"
+                "message" => "Sizes not found"
             ],
             404);
         }
         return response()->json([
-            "data"=>$brands
+            "data" => $sizes
         ],
         200);
     }
@@ -32,8 +32,8 @@ class BrandController extends Controller
      */
     public function store(Request $request)
     {
-        $validator =Validator::make($request->all(), [
-            "name" => "required|unique:brands"
+        $validator = Validator::make($request->all(), [
+            "name" => "required|unique:sizes"
         ]);
 
         if ($validator->fails()) {
@@ -43,19 +43,15 @@ class BrandController extends Controller
             422);
         }
 
-        $brand =Brand::create([
-            "name" => $request->name,
-            "status" => $request->status
+        $size = Size::create([
+            "name" => $request->name
         ]);
 
         return response()->json([
-            "message" => "Brand created successfully",
-            "id" => $brand->id
+            "message" => "Size created successfully",
+            "id" => $size->id
         ],
         200);
-
-
-
     }
 
     /**
@@ -63,16 +59,15 @@ class BrandController extends Controller
      */
     public function show(string $id)
     {
-
-        $brand = Brand::find($id);
-        if ($brand) {
+        $size = Size::find($id);
+        if ($size) {
             return response()->json([
-                "data" => $brand
+                "data" => $size
             ],
             200);
         } else {
             return response()->json([
-                "message" => "Brand not found"
+                "message" => "Size not found"
             ],
             404);
         }
@@ -83,9 +78,8 @@ class BrandController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
         $validator = Validator::make($request->all(), [
-            "name" => "required"
+            "name" => "required|unique:sizes"
         ]);
 
         if ($validator->fails()) {
@@ -95,49 +89,46 @@ class BrandController extends Controller
             422);
         }
 
-        $brand = Brand::find($id);
+        $size = Size::find($id);
 
-        if ($brand) {
-            $brand->name = $request->name;
-            $brand->status =$request->status;
-            $brand->save();
+        if ($size) {
+            $size->name = $request->name;
+            $size->save();
 
             return response()->json([
-                "message" => "Brand updated successfully",
-               "id" => $brand->id
+                "message" => "Size updated successfully",
+                "id" => $size->id
             ],
             200);
         } else {
             return response()->json([
-                "message" => "Brand not found",
+                "message" => "Size not found"
             ],
             404);
-
-
         }
-    }
+    } // **Closing bracket added here!**
 
     /**
      * Remove the specified resource from storage.
      */
     public function destroy(string $id)
     {
-        $brand = Brand::find($id);
+        $size = Size::find($id);
 
-        if ($brand) {
-            $brand->delete();
+        if ($size) {
+            $size->delete();
 
             return response()->json([
-                "message" => "Brand deleted successfully",
-                "id" => $brand->id
+                "message" => "Size deleted successfully",
+                "id" => $size->id
+
             ],
             200);
         } else {
             return response()->json([
-                "message" => "Brand id is  not found"
+                "message" => "Size id is not found"
             ],
             404);
-
         }
     }
 }

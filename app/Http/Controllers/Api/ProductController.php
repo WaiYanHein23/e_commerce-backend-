@@ -30,10 +30,13 @@ class ProductController extends Controller
 
     public function store(){
         $validator=Validator::make(request()->all(),[
+            'category_id'=>['required'],
+            'brand_id'=>['required'],
+            'color_id'=>['required'],
+            'size_id'=>['required'],
+            'product_price_id'=>['required'],
             'name'=>['required'],
-            'description'=>['required'],
-            'price'=>['required'],
-            'quantity'=>['required'],
+            'image_path'=>'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
 
         ]);
         if($validator->fails()){
@@ -43,7 +46,17 @@ class ProductController extends Controller
             ],422);
         }
 
-        $product=Product::create(request()->all());
+        $path = request()->file('image_path')->store('images','public');
+
+        $product=Product::create([
+            'category_id'=>request('category_id'),
+            'brand_id'=>request('brand_id'),
+            'color_id'=>request('color_id'),
+            'size_id'=>request('size_id'),
+            'product_price_id'=>request('product_price_id'),
+            'name'=>request('name'),
+            'image_path'=>asset(`storage/.$path`),
+        ]);
 
 
         return response()->json([
@@ -65,10 +78,14 @@ class ProductController extends Controller
     public function update(Product $product){
 
         $validator=Validator::make(request()->all(),[
+            'category_id'=>['required'],
+            'brand_id'=>['required'],
+            'color_id'=>['required'],
+            'size_id'=>['required'],
+            'product_price_id'=>['required'],
             'name'=>['required'],
-            'description'=>['required'],
-            'price'=>['required'],
-            'quantity'=>['required'],
+            'image_path'=>'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+
 
         ]);
         if($validator->fails()){

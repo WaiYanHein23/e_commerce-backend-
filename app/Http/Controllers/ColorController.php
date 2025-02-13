@@ -2,27 +2,26 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
-use App\Models\Brand;
+use App\Models\Color;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
-class BrandController extends Controller
+class ColorController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $brands=Brand::all();
-        if ($brands->count() == 0) {
+        $colors = Color::all();
+        if ($colors->count() == 0) {
             return response()->json([
-                "message"=>"Brands not found"
+                "message" => "Colors not found"
             ],
             404);
         }
         return response()->json([
-            "data"=>$brands
+            "data" => $colors
         ],
         200);
     }
@@ -32,8 +31,8 @@ class BrandController extends Controller
      */
     public function store(Request $request)
     {
-        $validator =Validator::make($request->all(), [
-            "name" => "required|unique:brands"
+        $validator = Validator::make($request->all(), [
+            "name" => "required|unique:colors"
         ]);
 
         if ($validator->fails()) {
@@ -43,19 +42,15 @@ class BrandController extends Controller
             422);
         }
 
-        $brand =Brand::create([
-            "name" => $request->name,
-            "status" => $request->status
+        $color = Color::create([
+            "name" => $request->name
         ]);
 
         return response()->json([
-            "message" => "Brand created successfully",
-            "id" => $brand->id
+            "message" => "Color created successfully",
+            "id" => $color->id
         ],
         200);
-
-
-
     }
 
     /**
@@ -63,16 +58,15 @@ class BrandController extends Controller
      */
     public function show(string $id)
     {
-
-        $brand = Brand::find($id);
-        if ($brand) {
+        $color = Color::find($id);
+        if ($color) {
             return response()->json([
-                "data" => $brand
+                "data" => $color
             ],
             200);
         } else {
             return response()->json([
-                "message" => "Brand not found"
+                "message" => "Color not found"
             ],
             404);
         }
@@ -83,9 +77,8 @@ class BrandController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
         $validator = Validator::make($request->all(), [
-            "name" => "required"
+            "name" => "required|unique:colors"
         ]);
 
         if ($validator->fails()) {
@@ -95,49 +88,46 @@ class BrandController extends Controller
             422);
         }
 
-        $brand = Brand::find($id);
+        $color = Color::find($id);
 
-        if ($brand) {
-            $brand->name = $request->name;
-            $brand->status =$request->status;
-            $brand->save();
+        if ($color) {
+            $color->name = $request->name;
+            $color->save();
 
             return response()->json([
-                "message" => "Brand updated successfully",
-               "id" => $brand->id
+                "message" => "Color updated successfully",
+                "id" => $color->id
             ],
             200);
         } else {
             return response()->json([
-                "message" => "Brand not found",
+                "message" => "Color not found"
             ],
             404);
-
-
         }
-    }
+    } // **Closing bracket added here!**
 
     /**
      * Remove the specified resource from storage.
      */
     public function destroy(string $id)
     {
-        $brand = Brand::find($id);
+        $color = Color::find($id);
 
-        if ($brand) {
-            $brand->delete();
+        if ($color) {
+            $color->delete();
 
             return response()->json([
-                "message" => "Brand deleted successfully",
-                "id" => $brand->id
+                "message" => "Color deleted successfully",
+                "id" => $color->id
+
             ],
             200);
         } else {
             return response()->json([
-                "message" => "Brand id is  not found"
+                "message" => "Color id is not found"
             ],
             404);
-
         }
     }
 }

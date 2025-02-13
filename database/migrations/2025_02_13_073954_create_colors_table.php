@@ -11,25 +11,18 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('products', function (Blueprint $table) {
+        Schema::create('colors', function (Blueprint $table) {
             $table->id();
-            $table->integer('category_id');
-            $table->integer('brand_id');
-            $table->integer('color_id');
-            $table->integer('size_id');
-            $table->integer('product_price_id');
             $table->string('name');
-            $table->string('image_path')->nullable(); // Nullable to allow empty images
             $table->timestamps();
         });
     }
-
 
     /**
      * Reverse the migrations.
      */
     public function down(): void
     {
-        Schema::dropIfExists('products');
+        Schema::dropIfExists('colors');
     }
 };

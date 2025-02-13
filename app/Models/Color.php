@@ -4,14 +4,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Category extends Model
+class Color extends Model
 {
     //
-    protected $fillable=['name','status'];
-
+    protected $table = 'colors';
+    protected $fillable = ['name'];
 
     public function product(){
         return $this->belongsTo(Product::class);
-
     }
 }

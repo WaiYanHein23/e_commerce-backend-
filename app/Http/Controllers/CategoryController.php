@@ -4,14 +4,19 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class CategoryController extends Controller
 {
     public function store(){
-        $cleanData = request()->validate([
+         request()->validate([
             'name' => 'required|min:2|unique:categories',
+            'status'=>'required'
         ]);
-        $category = Category::create($cleanData);
+        $category = Category::create([
+            'name' => request('name'),
+            'status' => request('status')
+        ]);
         return response()->json([
             'status' => 200,
             'message' => 'Category created successfully',
@@ -37,7 +42,7 @@ class CategoryController extends Controller
             ],200);
     }
 
-    public function delete($id){
+    public function destroy($id){
         $category = Category::find($id);
         if(!$category){
             return response()->json([
@@ -53,16 +58,40 @@ class CategoryController extends Controller
         ],200);
     }
 
-    public function update(Category $category){
-        $cleanData = request()->validate([
-            'name' => 'required|min:2|unique:categories',
+    public function update(Request $request, string $id)
+    {
+        //
+        $validator = Validator::make($request->all(), [
+            "name" => "required"
         ]);
-        $category->update($cleanData);
-        return response()->json([
-            'status' => 200,
-            'message' => 'Category updated successfully',
-            'category' => $category->id,
-        ],200);
+
+        if ($validator->fails()) {
+            return response()->json([
+                "error" => $validator->errors()
+            ],
+            422);
+        }
+
+        $category = Category::find($id);
+
+        if ($category) {
+            $category->name = $request->name;
+            $category->status = $request->status;
+            $category->save();
+
+            return response()->json([
+                "message" => "Category updated successfully",
+               "id" => $category->id
+            ],
+            200);
+        } else {
+            return response()->json([
+                "message" => "Category not found",
+            ],
+            404);
+
+
+        }
     }
 
 }
